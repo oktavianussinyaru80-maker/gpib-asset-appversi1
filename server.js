@@ -5,17 +5,17 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// KONEKSI SUPABASE ONLINE (MENGGUNAKAN PUBLISHABLE KEY AMAN)
-const SUPABASE_URL = 'https://xsutkuazoprovxbrjgcw.supabase.co';
+// KONEKSI SUPABASE ONLINE
+const SUPABASE_URL = 'https://supabase.co';
 const SUPABASE_KEY = 'sb_publishable_dJVJ9iiDsSr6nTqMWua0FA_Dj21KC6o';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Mengarahkan rute utama ke dalam folder views/dashboard.html
+// PERBAIKAN: Mengarahkan langsung ke dashboard.html di luar root
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
+    res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
 // API: Ambil data dari Supabase
@@ -48,7 +48,6 @@ app.post('/api/assets', async (req, res) => {
         const count = (existingAssets ? existingAssets.length : 0) + 1;
         const nomorUrut = String(count).padStart(3, '0');
         
-        // KODE BSA OTOMATIS MENYESUAIKAN LOKASI DAN TEMPAT YANG DIPILIH
         const kodeBSA = `BSA-${kategori}-${lokasi}-${tempat}-${tahun}-${nomorUrut}`;
         
         const { data: insertedData, error: insertError } = await supabase
@@ -64,7 +63,7 @@ app.post('/api/assets', async (req, res) => {
     }
 });
 
-// API: Menghapus baris data aset berdasarkan ID dengan PIN
+// API: Menghapus baris data aset berdasarkan ID dengan PIN 1234
 app.delete('/api/assets/:id', async (req, res) => {
     try {
         const { id } = req.params;
